@@ -37,21 +37,34 @@ export const adminMovieService = {
         }
     },
 
-    syncMovies: async (slugs: string[]): Promise<SyncResult> => {
+    syncMovies: async (slugs: string[], options?: SyncOptions): Promise<SyncResult> => {
         try {
-            const BATCH_SIZE = 20; // Xử lý 20 phim mỗi lần
+            const BATCH_SIZE = 20;
             const allResults: string[] = [];
+            let progress: Record<string, SyncProgress> = {};
 
-            // Chia thành các batch nhỏ
             for (let i = 0; i < slugs.length; i += BATCH_SIZE) {
                 const batchSlugs = slugs.slice(i, i + BATCH_SIZE);
 
                 try {
+                    // Cập nhật status 'processing' cho batch hiện tại
+                    batchSlugs.forEach(slug => {
+                        progress[slug] = {
+                            slug: slug,
+                            status: 'processing',
+                            percentage: ((i + BATCH_SIZE) / slugs.length) * 100
+                        };
+                    });
+
+                    if (options?.onProgress) {
+                        options.onProgress(Object.values(progress));
+                    }
+
                     const response = await api.post<ApiResponse<string[]>>(
                         config.API.ENDPOINTS.ADMIN.SYNC_MOVIES,
                         { slugs: batchSlugs },
                         {
-                            timeout: 300000, // Giữ nguyên 5 phút cho mỗi batch
+                            timeout: 300000,
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem('token')}`
                             }
@@ -60,14 +73,39 @@ export const adminMovieService = {
 
                     if (response.data.data) {
                         allResults.push(...response.data.data);
+
+                        // Cập nhật status 'completed' cho các slug thành công
+                        batchSlugs.forEach(slug => {
+                            progress[slug] = {
+                                slug: slug,
+                                status: 'completed',
+                                percentage: ((i + BATCH_SIZE) / slugs.length) * 100
+                            };
+                        });
                     }
 
-                    // Thêm delay giữa các batch
+                    if (options?.onProgress) {
+                        options.onProgress(Object.values(progress));
+                    }
+
                     if (i + BATCH_SIZE < slugs.length) {
                         await new Promise(resolve => setTimeout(resolve, 2000));
                     }
                 } catch (error) {
                     console.error(`Error syncing batch ${i / BATCH_SIZE + 1}:`, error);
+
+                    // Cập nhật status 'failed' cho các slug bị lỗi
+                    batchSlugs.forEach(slug => {
+                        progress[slug] = {
+                            slug: slug,
+                            status: 'failed',
+                            percentage: ((i + BATCH_SIZE) / slugs.length) * 100
+                        };
+                    });
+
+                    if (options?.onProgress) {
+                        options.onProgress(Object.values(progress));
+                    }
                 }
             }
 

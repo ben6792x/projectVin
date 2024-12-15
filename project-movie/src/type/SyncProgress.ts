@@ -4,4 +4,5 @@ interface SyncProgress {
     startTime?: number;
     endTime?: number;
     error?: string;
+    percentage: number;
 }

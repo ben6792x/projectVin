@@ -58,6 +58,7 @@ export default function SyncMovieForm() {
         }
     };
 
+
     return (
         <div className="bg-white shadow rounded-lg p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
