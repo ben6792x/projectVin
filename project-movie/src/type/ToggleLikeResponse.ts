@@ -1,0 +1,3 @@
+interface ToggleLikeResponse {
+    liked: boolean;
+}

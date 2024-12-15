@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* src/app/globals.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Swiper Navigation */
+.swiper-button-next,
+.swiper-button-prev {
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  top: 45%;
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: rgba(59, 130, 246, 0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.swiper-button-prev {
+  left: -5px;
+}
+
+.swiper-button-next {
+  right: -5px;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Movie Card Styles */
+.movie-card {
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.movie-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.movie-card:hover::after {
+  opacity: 1;
+}
+
+.movie-overlay {
+  opacity: 0;
+  transition: all 0.3s ease;
+  padding: 0.5rem !important;
+}
+
+.movie-card:hover .movie-overlay {
+  opacity: 1;
+}
+
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.movie-card:hover .play-icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.movie-card h3 {
+  font-size: 0.875rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.movie-card .absolute.top-2 {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.75rem;
+}
+
+/* Swiper Pagination */
+.swiper-pagination {
+  position: relative;
+  margin-top: 20px;
+}
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #4B5563;
+  opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+  background: #3B82F6;
+  opacity: 1;
+}
+
+/* Swiper Container Wrapper */
+.swiper-container-wrapper {
+  padding: 0 15px;
+  position: relative;
+  margin: 0 10px;
+}
+
+.swiper-container-wrapper::before,
+.swiper-container-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.swiper-container-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, rgb(17, 24, 39), transparent);
+}
+
+.swiper-container-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, rgb(17, 24, 39), transparent);
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
