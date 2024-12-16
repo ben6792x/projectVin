@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         },
     },
     verification: {
-        google: 'your-google-verification-code',
+        google: 'google-site-verification=hsP7YKkVne7JIKIWoak3RDCLXyalV3t5ThNTzL_8ACk',
     },
     alternates: {
         canonical: 'https://anime3d.online'
